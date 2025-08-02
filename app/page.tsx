@@ -1,5 +1,6 @@
 import HeroBannerSection from "@/components/hero-banner-section";
 import NecessitySection from "@/components/necessity-section";
+import TypesOfBlindsSection from "@/components/types-of-blinds-section";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
 
       <HeroBannerSection/>
       <NecessitySection/>
+      <TypesOfBlindsSection/>
     </div>
   );
 }
