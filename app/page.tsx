@@ -1,24 +1,29 @@
-import HeroBannerSection from "@/components/hero-banner-section";
-import NecessitySection from "@/components/necessity-section";
-import TypesOfBlindsSection from "@/components/types-of-blinds-section";
+import FeaturesSection from "@/components/sections/FeaturesSection";
+import WhyUsSection from "@/components/sections/WhyUsSection";
+import AboutUsSection from "@/components/sections/AboutUsSection";
+import PartnersSection from "@/components/sections/PartnersSection";
+import RanchFenceSection from "@/components/sections/RanchFenceSection";
+import LouveredFenceSection from "@/components/sections/LouveredFenceSection";
+import OtherProductsSection from "@/components/sections/OtherProductsSection";
+import GuaranteesSection from "@/components/sections/GuaranteesSection";
+import DeliveryAndPaymentSection from "@/components/sections/DeliveryAndPaymentSection";
+import ContactSection from "@/components/sections/ContactSection";
+import HeroSection from "@/components/sections/HeroSection";
 
 export default function Home() {
   return (
-    <div className={'flex flex-col gap-4 relative'}>
-
-      <div className={'absolute top-0 right-0 left-0 z-30 text-white'}>
-        <nav className={'flex gap-4'}>
-          <span>Menu</span>
-          <span>Menu</span>
-          <span>Menu</span>
-          <span>Menu</span>
-        </nav>
-      </div>
-
-
-      <HeroBannerSection/>
-      <NecessitySection/>
-      <TypesOfBlindsSection/>
+    <div className={'flex flex-col'}>
+      <HeroSection/>
+      <FeaturesSection/>
+      <WhyUsSection/>
+      <AboutUsSection/>
+      <PartnersSection/>
+      <RanchFenceSection/>
+      <LouveredFenceSection/>
+      <OtherProductsSection/>
+      <GuaranteesSection/>
+      <DeliveryAndPaymentSection/>
+      <ContactSection/>
     </div>
   );
 }
