@@ -15,20 +15,22 @@ export default function Home() {
     <div className={'flex flex-col'}>
       <HeroSection/>
       <FeaturesSection/>
-      <WhyUsSection/>
-      <AboutUsSection/>
-
-      <RanchFenceSection/>
+      <div id={'warto'}>
+        <WhyUsSection/>
+      </div>
+      <div id={'about'}>
+        <AboutUsSection/>
+      </div>
+      <div id={'products'}>
+        <RanchFenceSection/>
+      </div>
       <LouveredFenceSection/>
       <OtherProductsSection/>
 
-
-
-      <PartnersSection/>
-
-      <GuaranteesSection/>
-      <DeliveryAndPaymentSection/>
-      <ContactSection/>
+      {/*<PartnersSection/>*/}
+      {/*<GuaranteesSection/>*/}
+      {/*<DeliveryAndPaymentSection/>*/}
+      {/*<ContactSection/>*/}
     </div>
   );
 }

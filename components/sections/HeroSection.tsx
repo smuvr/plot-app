@@ -6,7 +6,7 @@ import { Menu, X, Shield } from 'lucide-react';
 // Данные для навигационных ссылок
 const navLinks = [
   { name: 'O nas', href: '#about' },
-  { name: 'Projekty', href: '#projects' },
+  { name: 'Dlaczego warto', href: '#warto' },
   { name: 'Produkty', href: '#products' },
   { name: 'Kontakt', href: '#contact' },
 ];
@@ -14,12 +14,34 @@ const navLinks = [
 const HeroSection: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Функция для плавной прокрутки
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    if (href) {
+      const targetId = href.substring(1); // Удаляем '#' из начала строки
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    }
+    // Закрываем мобильное меню после клика
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  };
+
+
   return (
     <div className="relative bg-gray-900 text-white min-h-screen flex flex-col">
       {/* Фоновое изображение с затемнением */}
       <div className="absolute inset-0 z-0">
         <img
-          src="images/hero.png"
+          src="/images/hero.png"
           alt="Nowoczesny dom z ogrodzeniem"
           className="w-full h-full object-cover"
         />
@@ -41,6 +63,7 @@ const HeroSection: React.FC = () => {
                 <a
                   key={link.name}
                   href={link.href}
+                  onClick={handleSmoothScroll} // Добавляем обработчик
                   className="text-slate-300 hover:text-white transition-colors duration-300"
                 >
                   {link.name}
@@ -52,6 +75,7 @@ const HeroSection: React.FC = () => {
             <div className="flex items-center gap-4">
               <a
                 href="#quote"
+                onClick={handleSmoothScroll} // Добавляем обработчик
                 className="hidden sm:inline-block bg-orange-500 text-white font-bold py-2 px-5 rounded-lg shadow-md hover:bg-orange-600 transition-all duration-300"
               >
                 Zamów wycenę
@@ -76,7 +100,7 @@ const HeroSection: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={handleSmoothScroll} // Заменяем обработчик
                 className="text-lg text-slate-200 hover:text-orange-400 transition-colors duration-300"
               >
                 {link.name}
@@ -84,7 +108,7 @@ const HeroSection: React.FC = () => {
             ))}
             <a
               href="#quote"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={handleSmoothScroll} // Заменяем обработчик
               className="w-full text-center mt-4 bg-orange-500 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-orange-600 transition-all duration-300"
             >
               Zamów wycenę
@@ -97,8 +121,8 @@ const HeroSection: React.FC = () => {
       <main className="relative z-10 flex-grow flex items-center">
 
         <div className="relative container mx-auto pt-4 pb-8 px-4 max-w-7xl text-center">
-          <div className={'absolute top-0 bottom-0 left-0 right-0 bg-black opacity-[70%] z-0'}></div>
-          <div className={'relative z-10'}>
+          <div className={'absolute top-0 bottom-0 left-0 right-0 bg-black opacity-[70%] z-0 rounded-xl'}></div>
+          <div className={'relative z-10 p-8'}>
             <h1 className="text-4xl md:text-6xl m-0 lg:text-7xl font-extrabold tracking-tight leading-tight">
               Nowoczesne Ogrodzenia,
               <br />
@@ -110,6 +134,7 @@ const HeroSection: React.FC = () => {
             <div className="mt-10">
               <a
                 href="#quote"
+                onClick={handleSmoothScroll} // Добавляем обработчик
                 className="inline-block bg-orange-500 text-white font-bold text-lg py-4 px-10 rounded-lg shadow-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105"
               >
                 Zamów Wycenę
