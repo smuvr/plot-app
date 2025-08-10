@@ -17,10 +17,15 @@ export default function Home() {
       <FeaturesSection/>
       <WhyUsSection/>
       <AboutUsSection/>
-      <PartnersSection/>
+
       <RanchFenceSection/>
       <LouveredFenceSection/>
       <OtherProductsSection/>
+
+
+
+      <PartnersSection/>
+
       <GuaranteesSection/>
       <DeliveryAndPaymentSection/>
       <ContactSection/>

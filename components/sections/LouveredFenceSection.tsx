@@ -1,7 +1,9 @@
-import React from 'react';
-import { Box, Palette, CheckCircle, Settings, Ruler, Star, Award, Home, MapPin, Phone, Mail, Send } from 'lucide-react';
+'use client'
 
-// Типизация для карточки продукта
+import React from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Box, Palette, Award, Star, Home, MapPin, Phone, Send } from 'lucide-react';
+
 interface LouveredFenceType {
   icon: React.ElementType;
   title: string;
@@ -16,12 +18,11 @@ interface LouveredFenceType {
   priceNote: string;
 }
 
-// Данные для карточек продуктов
 const louveredFenceTypes: LouveredFenceType[] = [
   {
     icon: Box,
     title: 'Ogrodzenie Żaluzjowe Matowe',
-    image: 'https://placehold.co/600x400/4A5568/FFFFFF?text=Ogrodzenie+Matowe',
+    image: '/images/matowe.jpg',
     profile: 'Klasyczna forma lameli - elegancja i funkcjonalność.',
     slatDims: 'Grubość: 0,5 mm, Szerokość: 80 mm',
     fastening: 'Nity lub wkręty - rozstaw co 95 mm',
@@ -40,7 +41,7 @@ const louveredFenceTypes: LouveredFenceType[] = [
   {
     icon: Palette,
     title: 'Ogrodzenie w Kolorze Drewna',
-    image: 'https://placehold.co/600x400/8B5A2B/FFFFFF?text=Ogrodzenie+Drewnopodobne',
+    image: '/images/drzewopodobne.jpg',
     profile: 'Klasyczna forma lameli - elegancja i funkcjonalność.',
     slatDims: 'Grubość: 0,5 mm, Szerokość: 80 mm',
     fastening: 'Nity lub wkręty - rozstaw co 95 mm',
@@ -65,34 +66,96 @@ const ourAdvantages = [
   { icon: MapPin, title: 'Białystok', description: 'Bez pośredników, prosto z zakładu.' },
 ];
 
-const LouveredFenceSection: React.FC = () => {
+// Общие компоненты и утилиты для анимации
+const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string; }> = ({ children, className }) => {
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
   return (
-    <section className="bg-[#242933] text-white py-20 sm:py-28">
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    }
+  },
+};
+
+
+const LouveredFenceSection: React.FC = () => {
+  const cardsRef = React.useRef(null);
+  const cardsInView = useInView(cardsRef, { once: true, amount: 0.1 });
+
+  const advantagesRef = React.useRef(null);
+  const advantagesInView = useInView(advantagesRef, { once: true, amount: 0.2 });
+
+  const sectionStyle = {
+    backgroundColor: '#242933',
+    backgroundImage: 'repeating-linear-gradient(90deg, #2B303B, #2B303B 2px, transparent 2px, transparent 6px)',
+  };
+
+  return (
+    <section style={sectionStyle} className="text-white pt-10 pb-20 sm:pt-10 sm:pb-28 overflow-hidden">
       <div className="container mx-auto px-4 max-w-7xl">
 
         {/* Заголовок */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <AnimatedSection className="text-center mb-16 max-w-3xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
             Ogrodzenia Żaluzjowe
           </h2>
           <p className="text-lg text-slate-300">
             Nowoczesność, prywatność i styl - wszystko w jednym! Profesjonalne ogrodzenia z profilu Z prosto z fabryki w Białymstoku.
           </p>
-        </div>
+        </AnimatedSection>
 
         {/* 2 карточки продуктов */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24">
+        <motion.div
+          ref={cardsRef}
+          variants={containerVariants}
+          initial="hidden"
+          animate={cardsInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24"
+        >
           {louveredFenceTypes.map((fence, index) => {
             const Icon = fence.icon;
             return (
-              <div key={index} className="bg-[#2B303B] rounded-2xl shadow-lg border border-slate-700/50 flex flex-col transition-all duration-300 hover:border-orange-500/50 hover:-translate-y-1">
+              <motion.div
+                key={index}
+                variants={itemVariants as any}
+                className="bg-[#2B303B] rounded-2xl shadow-lg border border-slate-700/50 flex flex-col transition-all duration-300 hover:border-orange-500/50 hover:!scale-105 hover:-translate-y-1"
+              >
                 <div className="p-6 flex items-center gap-4 border-b border-slate-700">
                   <div className="flex-shrink-0 w-10 h-10 bg-orange-500/10 text-orange-400 rounded-lg flex items-center justify-center">
                     <Icon className="w-6 h-6" />
                   </div>
                   <h3 className="text-xl font-bold">{fence.title}</h3>
                 </div>
-                <img src={fence.image} alt={fence.title} className="h-52 w-full object-cover" />
+                <img src={fence.image} alt={fence.title} className="h-52 w-full object-cover" onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/2B303B/FFFFFF?text=Image+not+found'; }} />
                 <div className="p-6 space-y-4 text-sm">
                   <p><strong className="text-slate-100">Profil Z:</strong> <span className="text-slate-300">{fence.profile}</span></p>
                   <p><strong className="text-slate-100">Wymiary lameli:</strong> <span className="text-slate-300">{fence.slatDims}</span></p>
@@ -106,15 +169,15 @@ const LouveredFenceSection: React.FC = () => {
                           <div key={i} className="group relative">
                             <div className="w-7 h-7 rounded-md border border-slate-600" style={{ backgroundColor: color.hex }}></div>
                             <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 text-white text-xs px-2 py-1 rounded z-10 whitespace-nowrap">
-                                            {color.code}
-                                        </span>
+                              {color.code}
+                            </span>
                           </div>
                         ) : (
                           <div key={i} className="group relative">
                             <img src={color.image} alt={color.name} className="w-12 h-6 rounded-sm border border-slate-600 object-cover"/>
                             <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 text-white text-xs px-2 py-1 rounded z-10 whitespace-nowrap">
-                                            {color.name}
-                                        </span>
+                              {color.name}
+                            </span>
                           </div>
                         )
                       ))}
@@ -131,19 +194,25 @@ const LouveredFenceSection: React.FC = () => {
                     Wycena
                   </button>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Секция преимуществ */}
-        <div className="bg-[#2B303B] p-8 sm:p-12 rounded-2xl border border-slate-700/50 mb-24">
+        <AnimatedSection className="bg-[#2B303B] p-8 sm:p-12 rounded-2xl border border-slate-700/50 mb-24">
           <h3 className="text-2xl sm:text-3xl font-bold text-center mb-10">Zalety naszego ogrodzenia</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          <motion.div
+            ref={advantagesRef}
+            variants={containerVariants}
+            initial="hidden"
+            animate={advantagesInView ? "visible" : "hidden"}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center"
+          >
             {ourAdvantages.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={index} className="flex flex-col items-center">
+                <motion.div key={index} variants={itemVariants as any} className="flex flex-col items-center">
                   <div className="flex-shrink-0 w-16 h-16 bg-orange-500/10 border border-orange-500/30 rounded-full flex items-center justify-center mb-4">
                     <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
                       <Icon className="w-6 h-6 text-white" />
@@ -151,14 +220,14 @@ const LouveredFenceSection: React.FC = () => {
                   </div>
                   <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
                   <p className="text-slate-400 text-sm max-w-xs">{feature.description}</p>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
-        </div>
+          </motion.div>
+        </AnimatedSection>
 
         {/* Финальный призыв к действию */}
-        <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-8 sm:p-10 rounded-2xl text-center shadow-2xl shadow-orange-900/20">
+        <AnimatedSection className="bg-gradient-to-br from-orange-500 to-orange-600 p-8 sm:p-10 rounded-2xl text-center shadow-2xl shadow-orange-900/20">
           <h3 className="text-2xl sm:text-3xl font-bold mb-2">Potrzebujesz indywidualnej wyceny?</h3>
           <p className="text-white/90 mb-6">Skontaktuj się z nami, aby uzyskać szczegółową wycenę montażu "pod klucz".</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -169,7 +238,7 @@ const LouveredFenceSection: React.FC = () => {
               <Send className="w-5 h-5" /> Wyślij zapytanie
             </button>
           </div>
-        </div>
+        </AnimatedSection>
 
       </div>
     </section>

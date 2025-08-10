@@ -21,7 +21,7 @@ const HeroSection: React.FC = () => {
         <img
           src="images/hero.png"
           alt="Nowoczesny dom z ogrodzeniem"
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
         />
       </div>
 
@@ -95,23 +95,28 @@ const HeroSection: React.FC = () => {
 
       {/* Основной контент */}
       <main className="relative z-10 flex-grow flex items-center">
-        <div className="container mx-auto px-4 max-w-7xl text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-            Nowoczesne Ogrodzenia,
-            <br />
-            <span className="text-orange-500">Bezkompromisowa Jakość</span>
-          </h1>
-          <p className="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-slate-300">
-            Najwyższej jakości konstrukcje metalowe, wykonane z precyzją i stworzone, by służyć latami.
-          </p>
-          <div className="mt-10">
-            <a
-              href="#quote"
-              className="inline-block bg-orange-500 text-white font-bold text-lg py-4 px-10 rounded-lg shadow-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105"
-            >
-              Zamów Wycenę
-            </a>
+
+        <div className="relative container mx-auto pt-4 pb-8 px-4 max-w-7xl text-center">
+          <div className={'absolute top-0 bottom-0 left-0 right-0 bg-black opacity-[70%] z-0'}></div>
+          <div className={'relative z-10'}>
+            <h1 className="text-4xl md:text-6xl m-0 lg:text-7xl font-extrabold tracking-tight leading-tight">
+              Nowoczesne Ogrodzenia,
+              <br />
+              <span className="text-orange-500">Bezkompromisowa Jakość</span>
+            </h1>
+            <p className="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-slate-300">
+              Najwyższej jakości konstrukcje metalowe, wykonane z precyzją i stworzone, by służyć latami.
+            </p>
+            <div className="mt-10">
+              <a
+                href="#quote"
+                className="inline-block bg-orange-500 text-white font-bold text-lg py-4 px-10 rounded-lg shadow-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105"
+              >
+                Zamów Wycenę
+              </a>
+            </div>
           </div>
+
         </div>
       </main>
     </div>

@@ -1,5 +1,8 @@
+'use client'
+
 import React from 'react';
-import { Check, Shield, Wrench, Palette, Phone } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { Shield, Wrench, Palette, Phone } from 'lucide-react';
 
 // Типизация для карточки продукта
 interface FenceType {
@@ -20,7 +23,7 @@ const fenceTypes: FenceType[] = [
   {
     tag: 'STANDARD',
     tagColor: 'bg-slate-500',
-    image: 'https://placehold.co/600x400/555/FFF?text=Ranczo+Standard',
+    image: '/images/ranczo.jpg',
     title: 'Ranczo Standard',
     coating: 'połysk / mat',
     material: 'Listwa składana, wypełnienie z pianki (styropian). Grubość blachy: 0,5 mm.',
@@ -36,7 +39,7 @@ const fenceTypes: FenceType[] = [
   {
     tag: 'MIX',
     tagColor: 'bg-orange-500',
-    image: 'https://placehold.co/600x400/8B4513/FFF?text=Ranczo+MIX',
+    image: '/images/ranczo_mix_example.jpg',
     title: 'Ranczo MIX',
     coating: 'mat / printoch',
     material: 'Listwa składana, wypełnienie z pianki (styropian). Grubość blachy: 0,5 mm.',
@@ -52,7 +55,7 @@ const fenceTypes: FenceType[] = [
   {
     tag: 'DREWNO',
     tagColor: 'bg-yellow-700',
-    image: 'https://placehold.co/600x400/CD853F/FFF?text=Kolor+Drewna',
+    image: '/images/ranczo_drzewo.jpg',
     title: 'Ranczo w kolorze drewna',
     coating: 'Printoch',
     material: 'Listwa składana, wypełnienie z pianki (styropian). Grubość blachy: 0,5 mm.',
@@ -86,28 +89,95 @@ const comparisonFeatures = [
   },
 ];
 
+// Компонент для анимированного появления при скролле
+const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string; }> = ({ children, className }) => {
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// Варианты анимации для контейнеров и их дочерних элементов
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    }
+  },
+};
+
 
 const RanchFenceSection: React.FC = () => {
+  const cardsRef = React.useRef(null);
+  const cardsInView = useInView(cardsRef, { once: true, amount: 0.1 });
+
+  const comparisonRef = React.useRef(null);
+  const comparisonInView = useInView(comparisonRef, { once: true, amount: 0.3 });
+
+  const sectionStyle = {
+    backgroundColor: '#242933',
+    backgroundImage: 'repeating-linear-gradient(90deg, #2B303B, #2B303B 2px, transparent 2px, transparent 6px)',
+  };
+
   return (
-    <section className="bg-[#242933] text-white py-20 sm:py-28">
+    <section style={sectionStyle} className="text-white pt-20 pb-10 sm:pt-28 sm:pb-10 overflow-hidden">
       <div className="container mx-auto px-4 max-w-7xl">
 
         {/* Заголовок */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <AnimatedSection className="text-center mb-16 max-w-3xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
             Ogrodzenie Typu Ranczo
           </h2>
           <p className="text-lg text-slate-300">
             Profesjonalne ogrodzenia metalowe z najwyższej jakości materiałów. Trzy warianty do wyboru - każdy z unikalnym charakterem.
           </p>
-        </div>
+        </AnimatedSection>
 
         {/* 3 карточки продуктов */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24 items-stretch">
+        <motion.div
+          ref={cardsRef}
+          variants={containerVariants}
+          initial="hidden"
+          animate={cardsInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24 items-stretch"
+        >
           {fenceTypes.map((fence, index) => (
-            <div key={index} className="bg-[#2B303B] rounded-2xl shadow-lg border border-slate-700/50 flex flex-col transition-all duration-300 hover:border-orange-500/50 hover:-translate-y-1">
+            <motion.div
+              key={index}
+              variants={itemVariants as any}
+              className="bg-[#2B303B] rounded-2xl shadow-lg border border-slate-700/50 flex flex-col transition-all duration-300 hover:border-orange-500/50 hover:!scale-105 hover:-translate-y-1"
+            >
               <div className="relative">
-                <img src={fence.image} alt={fence.title} className="rounded-t-2xl h-56 w-full object-cover" />
+                <img
+                  src={fence.image}
+                  alt={fence.title}
+                  className="rounded-t-2xl h-56 w-full object-cover"
+                  onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/2B303B/FFFFFF?text=Image+not+found'; }}
+                />
                 <span className={`absolute top-4 left-4 text-xs font-bold uppercase tracking-wider text-white px-3 py-1 rounded-full ${fence.tagColor}`}>
                   {fence.tag}
                 </span>
@@ -124,14 +194,14 @@ const RanchFenceSection: React.FC = () => {
                         'hex' in color ? (
                           <div key={i} className="group relative">
                             <div className="w-6 h-6 rounded-sm border border-slate-600" style={{ backgroundColor: color.hex }}></div>
-                            <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 text-white text-xs px-2 py-1 rounded">
+                            <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 text-white text-xs px-2 py-1 rounded z-10">
                               {color.code}
                             </span>
                           </div>
                         ) : (
                           <div key={i} className="group relative">
                             <img src={color.image} alt={color.name} className="w-10 h-5 rounded-sm border border-slate-600 object-cover"/>
-                            <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 text-white text-xs px-2 py-1 rounded">
+                            <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 text-white text-xs px-2 py-1 rounded z-10">
                               {color.name}
                             </span>
                           </div>
@@ -153,29 +223,36 @@ const RanchFenceSection: React.FC = () => {
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Секция сравнения */}
-        <div className="bg-[#2B303B] p-8 sm:p-12 rounded-2xl border border-slate-700/50">
-          <h3 className="text-2xl sm:text-3xl font-bold text-center mb-10">Porównanie właściwości</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {comparisonFeatures.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div key={index} className="flex flex-col items-center">
-                  <div className="flex-shrink-0 w-12 h-12 bg-orange-500/10 text-orange-400 rounded-lg flex items-center justify-center mb-4">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2">{feature.title}</h4>
-                  <p className="text-slate-400 text-sm max-w-xs">{feature.description}</p>
-                </div>
-              );
-            })}
+        <AnimatedSection>
+          <div className="bg-[#2B303B] p-8 sm:p-12 rounded-2xl border border-slate-700/50">
+            <h3 className="text-2xl sm:text-3xl font-bold text-center mb-10">Porównanie właściwości</h3>
+            <motion.div
+              ref={comparisonRef}
+              variants={containerVariants}
+              initial="hidden"
+              animate={comparisonInView ? "visible" : "hidden"}
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center"
+            >
+              {comparisonFeatures.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <motion.div key={index} variants={itemVariants as any} className="flex flex-col items-center">
+                    <div className="flex-shrink-0 w-12 h-12 bg-orange-500/10 text-orange-400 rounded-lg flex items-center justify-center mb-4">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-xl font-semibold mb-2">{feature.title}</h4>
+                    <p className="text-slate-400 text-sm max-w-xs">{feature.description}</p>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </div>
-        </div>
-
+        </AnimatedSection>
       </div>
     </section>
   );
