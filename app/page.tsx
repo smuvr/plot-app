@@ -30,7 +30,7 @@ export default function Home() {
       {/*<PartnersSection/>*/}
       {/*<GuaranteesSection/>*/}
       {/*<DeliveryAndPaymentSection/>*/}
-      {/*<ContactSection/>*/}
+      <ContactSection/>
     </div>
   );
 }
