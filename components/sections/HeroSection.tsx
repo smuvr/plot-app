@@ -14,12 +14,11 @@ const navLinks = [
 const HeroSection: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Функция для плавной прокрутки
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const href = e.currentTarget.getAttribute('href');
     if (href) {
-      const targetId = href.substring(1); // Удаляем '#' из начала строки
+      const targetId = href.substring(1);
       const targetElement = document.getElementById(targetId);
 
       if (targetElement) {
@@ -29,7 +28,6 @@ const HeroSection: React.FC = () => {
         });
       }
     }
-    // Закрываем мобильное меню после клика
     if (isMenuOpen) {
       setIsMenuOpen(false);
     }

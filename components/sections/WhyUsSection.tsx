@@ -120,12 +120,12 @@ const WhyUsSection: React.FC = () => {
       {/* --- Анимированные фоновые пятна (сделаны более заметными) --- */}
       <div aria-hidden="true" className="absolute inset-0 -z-0">
         <motion.div
-          className="absolute top-1/4 left-0 w-96 h-96 bg-orange-800/30 rounded-full filter blur-3xl"
+          className="absolute top-1/4 left-[75px] w-[250px] h-[250px] bg-orange-600 rounded-full filter blur-[200px]"
           animate={{
             x: [-100, 100, -100],
             y: [-50, 50, -50],
             scale: [1, 1.2, 1],
-            opacity: [1, 0.2, 0.7, 0.2],
+            opacity: [1, 0.5, 0.8, 0.5],
           }}
           transition={{
             duration: 40,
