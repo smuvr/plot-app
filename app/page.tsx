@@ -30,7 +30,9 @@ export default function Home() {
       {/*<PartnersSection/>*/}
       {/*<GuaranteesSection/>*/}
       {/*<DeliveryAndPaymentSection/>*/}
-      <ContactSection/>
+      <div id={'contact'}>
+        <ContactSection/>
+      </div>
     </div>
   );
 }
